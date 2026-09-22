@@ -123,7 +123,7 @@ export const initiateReturns = async (id: string) => {
 export const getUserLocation = async () => {
     try {
         const response = await axiosFetch.get("/user/current-location")
-        return response.data
+        return response.data?.location
     } catch (error: any) {
         console.error("Error getUserLocation: ", error);
         return {
