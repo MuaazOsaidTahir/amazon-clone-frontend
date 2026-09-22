@@ -16,13 +16,13 @@ function App() {
     <div className="min-h-screen bg-[#eaeded] text-[#0f1111]">
       <Routes>
         <Route element={<AppLayout />}>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/category/:category' element={<EachCategoryProducts />} />
-          <Route path='/checkout' element={<CheckoutPage />} />
-          <Route path='/profile' element={<UserProfile />} />
-          <Route path='/:id' element={<ProductDetail />} />
+          <Route path='/' element={<HomePage />} handle={{title: "8x - Amazon Home Page"}} />
+          <Route path='/category/:category' element={<EachCategoryProducts />} handle={{title: (params: any) => `${params.category} - 8x Amazon` }} />
+          <Route path='/checkout' element={<CheckoutPage />} handle={{title: "8x - Checkout Page"}} />
+          <Route path='/profile' element={<UserProfile />} handle={{title: "8x - User Profile Page"}} />
+          <Route path='/:id' element={<ProductDetail />} handle={{title: "8x - Product Detail Page"}} />
         </Route>
-        <Route path='/login' element={<LoginPage />} />
+        <Route path='/login' element={<LoginPage />} handle={{title: "8x - LogIn Page"}} />
       </Routes>
       <ToastComponent ref={toastRef} />
     </div>
