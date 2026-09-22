@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import ProductCard from './ProductCard'
 import Loader from './Loader'
 import { fetchProducts } from '../utils/api'
@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 
 function CategoryProducts({ category }: { category: string }) {
     const [products, setproducts] = useState<Product[]>([])
-    const [nextCursor, setnextCursor] = useState<any>({})
+    const [ _, setnextCursor] = useState<any>({})
     const firstFetch = useRef(true)
     const navigate = useNavigate()
     const [isLoading, setisLoading] = useState(false)

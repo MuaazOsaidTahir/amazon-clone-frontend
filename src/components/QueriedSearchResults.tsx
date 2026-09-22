@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import type { Product, SearchedProducts } from '../data/types';
+import type { SearchedProducts } from '../data/types';
 import { memo } from 'react';
 import Loader from './Loader';
 

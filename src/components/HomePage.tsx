@@ -1,7 +1,6 @@
 import { useStore } from '../context/StoreContext';
 import HeroSection from './HeroSection';
 import CategoryProducts from './CategoryProducts';
-import { useState } from 'react';
 
 
 export default function HomePage() {

@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useStore, type CartItem } from '../context/StoreContext';
-import Header from './Header';
+import { useStore } from '../context/StoreContext';
 import { checkoutProductsBilling } from '../utils/api';
 import { useMemo, useState } from 'react';
 
@@ -31,7 +30,7 @@ function CheckoutPage() {
         let body: { products: any } = {
           products: Object.values(cart)
         }
-       const res = await checkoutProductsBilling(body)
+        await checkoutProductsBilling(body)
        setisCheckingOut(false);
       //  if(res.success === false) if (!user) navigate("/login")
     } catch (error) {
