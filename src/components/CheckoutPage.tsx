@@ -4,7 +4,7 @@ import { checkoutProductsBilling } from '../utils/api';
 import { useMemo, useState } from 'react';
 
 function CheckoutPage() {
-  const { cart, addToCart, removeFromCart, user } = useStore();
+  const { cart, addToCart, removeFromCart, user, toastRef } = useStore();
   const navigate = useNavigate()
   const [isCheckingOut, setisCheckingOut] = useState(false)
 
@@ -27,14 +27,20 @@ function CheckoutPage() {
         navigate("/login")
         return;
       }
-        let body: { products: any } = {
-          products: Object.values(cart)
-        }
-        await checkoutProductsBilling(body)
-       setisCheckingOut(false);
+      setisCheckingOut(true);
+      let body: { products: any } = {
+        products: Object.values(cart)
+      }
+      await checkoutProductsBilling(body)
       //  if(res.success === false) if (!user) navigate("/login")
     } catch (error) {
-
+      toastRef.current?.show({
+        message: "An Error Ocurred while checking out",
+        type: 'error',
+        duration: 3000,
+      })
+    } finally {
+      setisCheckingOut(false);
     }
   }
 

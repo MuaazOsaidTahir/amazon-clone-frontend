@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { checkUserStatus, createUser, logInUser } from "../utils/api";
 import { useStore } from "../context/StoreContext";
+import Loader from "./Loader";
 
 
 export default function LoginPage() {
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const from = (location.state as { from?: string } | null)?.from || '/';
   const loginFetch = useRef(true)
+  const [isLoading, setisLoading] = useState(false)
 
   useLayoutEffect(() => {
     if (loginFetch.current) {
@@ -26,7 +28,9 @@ export default function LoginPage() {
   }, [])
 
   const submitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    if(isLoading) return;
     e.preventDefault();
+    setisLoading(true);
 
     if (formRef.current) {
       const formData = new FormData(formRef.current)
@@ -61,6 +65,8 @@ export default function LoginPage() {
           type: 'error',
           duration: 3000,
         });
+      } finally {
+        setisLoading(false);
       }
     }
   }
@@ -194,12 +200,13 @@ export default function LoginPage() {
                     Keep me signed in
                   </label>
 
-                  <button
+                  {isLoading ? <Loader size="md" /> : <button
                     type="submit"
+                    disabled={isLoading}
                     className="w-full rounded-md bg-[#ffd814] px-4 py-3 text-[15px] font-medium text-[#0f1111] shadow-[0_2px_0_rgba(15,17,17,0.15)] transition hover:bg-[#f7ca00]"
                   >
                     {currentState ? "Sign in" : "Sign up"}
-                  </button>
+                  </button>}
                 </form>
 
                 <div className="my-6 flex items-center gap-3">
