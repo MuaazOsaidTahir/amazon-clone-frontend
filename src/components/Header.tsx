@@ -50,7 +50,7 @@ const Header = () => {
             <PinIcon />
             <span className="leading-tight">
               <span className="block text-[11px] text-[#ccc]">Deliver to</span>
-              <span className="block text-[13px] font-bold">{currentLocation?.country ? `${currentLocation?.country}${currentLocation?.postal}` : "Unable to get location"}</span>
+              <span className="block text-[13px] font-bold">{currentLocation?.country ? `${currentLocation?.country} ${currentLocation?.postal}` : "Unable to get location"}</span>
             </span>
           </button>
 
@@ -105,7 +105,7 @@ const Header = () => {
         >
           <PinIcon />
           <span>
-            Deliver to <span className="font-bold text-white">{currentLocation?.country ? `${currentLocation?.country}${currentLocation?.postal}` : "Unable to get location"}</span>
+            Deliver to <span className="font-bold text-white">{currentLocation?.country ? `${currentLocation?.country} ${currentLocation?.postal}` : "Unable to get location"}</span>
           </span>
         </button>
       </div>

@@ -11,14 +11,28 @@ export default function UserProfile() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [category, setCategory] = useState("paid")
+    const [ordersCount, setOrdersCount] = useState<any[]>([])
+    const [ordersCountLoading, setOrdersCountLoading] = useState(true);
 
-    const fetchOrders = useCallback((status: string) => {
-        fetchUserOrders(status)
-            .then((response) => setOrders(response.orders ?? []))
-            .finally(() => setLoading(false));
-    },
-        [])
-
+    const fetchOrders = useCallback((status: string, count?: boolean) => {
+        if (!count) {
+            setLoading(true);
+        } else {
+            setOrdersCountLoading(true);
+        }
+        fetchUserOrders(status, count)
+            .then((response) => {
+                if (!count) {
+                    setOrders(response.orders ?? [])
+                } else {
+                    setOrdersCount(response?.orderCount)
+                }
+            })
+            .finally(() => {
+                setLoading(false)
+                setOrdersCountLoading(false);
+            });
+    }, [])
 
     useEffect(() => {
         if (!user) {
@@ -26,9 +40,8 @@ export default function UserProfile() {
             return;
         }
         fetchOrders(category)
+        fetchOrders(category, true)
     }, [user, navigate]);
-
-    console.log(orders);
 
     const productReturns = useCallback(async (id: string) => {
         try {
@@ -61,7 +74,13 @@ export default function UserProfile() {
 
                 <div id="orders" className="rounded-md border border-[#d5d9d9] bg-white p-5 shadow-sm">
                     <h2 className="text-xl font-bold">Orders</h2>
-                    <p className="mt-2 text-sm text-[#565959]">{orders.length} completed {orders.length === 1 ? 'order' : 'orders'}</p>
+                    {ordersCountLoading ? <Loader size='lg' /> : <>
+                        {
+                            ordersCount?.map(e => {
+                                return <p key={e?._id} className="mt-2 text-sm text-[#565959]">{e.count} {e?._id} {e?.count === 1 ? 'order' : 'orders'}</p>
+                            })
+                        }
+                    </>}
                 </div>
             </section>
 
@@ -76,7 +95,7 @@ export default function UserProfile() {
                             setCategory(e.target.value)
                         }
                         }
-                        className="max-w-30 shrink-0 cursor-pointer border-r border-gray-300 bg-[#e6e6e6] px-2 text-[12px] text-[#0f1111] outline-none hover:bg-[#d4d4d4]"
+                        className="max-w-30 shrink-0 cursor-pointer rounded-full border border-[#d5d9d9] bg-white px-3 py-2 text-[12px] font-medium text-[#0f1111] shadow-sm outline-none transition hover:border-[#007185] hover:bg-[#f7fafa] focus:border-[#007185] focus:ring-2 focus:ring-[#ffd814]"
                     >
                         <option value="pending">Pending</option>
                         <option value="paid">Paid</option>
@@ -92,7 +111,15 @@ export default function UserProfile() {
                             <article key={order._id} className="border-t border-[#eaeded] pt-4 first:border-t-0 first:pt-0">
                                 <div className="flex flex-wrap justify-between gap-2 text-sm">
                                     <span className="font-bold">Order placed {new Date(order.date).toLocaleDateString()}</span>
-                                    <span className="capitalize text-[#565959]">{order.status}</span>
+                                    <div>
+                                        <span className="capitalize text-[#565959] mr-3">{order.status}</span>
+                                         {order?.status === "paid" && <button
+                                            type="button"
+                                            className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#d5d9d9] bg-white px-3 py-2 text-xs font-medium text-[#0f1111] transition hover:border-[#007185] hover:bg-[#f7fafa] focus:outline-none focus:ring-2 focus:ring-[#ffd814]" onClick={() => productReturns(order._id)}
+                                        >
+                                            Return
+                                        </button>}
+                                    </div>
                                 </div>
                                 <div className="mt-3 space-y-3">
                                     {order.products.map(({ productId, quantity }) => (
@@ -104,12 +131,6 @@ export default function UserProfile() {
                                                     <p className="mt-1 text-[#565959]">Qty: {quantity}</p>
                                                 </div>
                                             </div>
-                                            <button
-                                                type="button"
-                                                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#d5d9d9] bg-white px-3 py-2 text-xs font-medium text-[#0f1111] transition hover:border-[#007185] hover:bg-[#f7fafa] focus:outline-none focus:ring-2 focus:ring-[#ffd814]" onClick={() => productReturns(order._id)}
-                                            >
-                                                Return
-                                            </button>
                                         </div>
                                     ))}
                                 </div>

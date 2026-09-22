@@ -96,9 +96,9 @@ export const checkUserStatus = async () => {
     }
 }
 
-export const fetchUserOrders = async (category: string) => {
+export const fetchUserOrders = async (category: string, count?: boolean) => {
     try {
-        const response = await axiosFetch.get(`/user/orders?category=${category}`);
+        const response = await axiosFetch.get(`/user/orders?category=${category}${count ? '&count=true' : ""}`);
         return response.data;
     } catch (error) {
         console.error("Error fetching user orders:", error);
@@ -123,7 +123,7 @@ export const initiateReturns = async (id: string) => {
 export const getUserLocation = async () => {
     try {
         const response = await axiosFetch.get("/user/current-location")
-        return response.data?.location
+        return response.data
     } catch (error: any) {
         console.error("Error getUserLocation: ", error);
         return {
